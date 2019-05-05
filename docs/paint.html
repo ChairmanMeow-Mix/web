@@ -7,9 +7,7 @@
 		<meta name="author" content="mooshmod">
 		<meta name="description" content="mooshmod site">
 		<meta name="keywords" content="mooshmod,moosh,mod">
-		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet"> 
 		<link rel="icon" type="image/png" href="icon.png">
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<style>
 			html, body {
 				margin: 0;
@@ -26,22 +24,18 @@
 		<div id="app">
 			<canvas id="drawingBoard" width=800 height=600></canvas>
 			<div>
-				<label>Size <input v-model="config.size"></label>
-				<label>Color <input v-model="config.color"></label>
+				<label>Size <input id="sizeInput" onchange="config.size=Number(event.target.value)"></label>
+				<label>Color <input id="colorInput" onchange="config.color=event.target.value"></label>
 			</div>
 		</div>
 		<script>
 			let config = {
 				size: 2,
 				color: "black"
-			}
+			};
 
-			let app = new Vue({
-				el: '#app',
-				data: {
-					config: config
-				}
-			});
+			document.getElementById("sizeInput").value = config.size;
+			document.getElementById("colorInput").value = config.color;
 
 			let canvas = document.getElementsByTagName("canvas")[0];
 			let xp = 0;
