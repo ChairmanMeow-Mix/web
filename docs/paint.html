@@ -9,6 +9,7 @@
 		<meta name="keywords" content="mooshmod,moosh,mod">
 		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet"> 
 		<link rel="icon" type="image/png" href="icon.png">
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<style>
 			html, body {
 				margin: 0;
@@ -22,19 +23,35 @@
 		</style>
   </head>
   <body oncontextmenu="return false">
-		<div>
+		<div id="app">
 			<canvas id="drawingBoard" width=800 height=600></canvas>
+			<div>
+				<label>Size <input v-model="config.size"></label>
+				<label>Color <input v-model="config.color"></label>
+			</div>
 		</div>
 		<script>
+			let config = {
+				size: 2,
+				color: "black"
+			}
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					config: config
+				}
+			});
+
 			let canvas = document.getElementsByTagName("canvas")[0];
 			let xp = 0;
 			let yp = 0;
 			let mousedown = false;
 			canvas.addEventListener("mousedown", function(e) {
 				let context = canvas.getContext("2d");
-				context.fillStyle = "black";
+				context.fillStyle = config.color;
 				context.beginPath();
-				context.arc(e.offsetX, e.offsetY, 1, 0, 2 * Math.PI);
+				context.arc(e.offsetX, e.offsetY, config.size, 0, 2 * Math.PI);
 				context.fill();
 				xp = e.offsetX; yp = e.offsetY;
 				mousedown = true;
@@ -44,12 +61,11 @@
 				let y = e.clientY - canvas.getBoundingClientRect().top;
 				if(!mousedown) return;
 				let context = canvas.getContext("2d");
-				context.lineWidth = 3;
-				context.strokeStyle = "black";
+				context.fillStyle = config.color;
 				context.beginPath();
 				let stepCount = Math.max(Math.abs(xp-x), Math.abs(yp-y));
 				for(let i = 0; i < stepCount; i++) {
-					context.arc(x + (xp - x) * i / stepCount, y + (yp - y) * i / stepCount, 1.5, 0, 2 * Math.PI);
+					context.arc(x + (xp - x) * i / stepCount, y + (yp - y) * i / stepCount, config.size, 0, 2 * Math.PI);
 				}
 				context.fill();
 				xp = x; yp = y;
