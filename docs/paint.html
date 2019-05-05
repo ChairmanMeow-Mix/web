@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Mooshmod Site</title>
+		<meta name="author" content="mooshmod">
+		<meta name="description" content="mooshmod site">
+		<meta name="keywords" content="mooshmod,moosh,mod">
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet"> 
+		<link rel="icon" type="image/png" href="icon.png">
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+			}
+			#drawingBoard {
+				margin: 100px;
+				border: 1px solid gray;
+				box-sizing: border-box;
+			}
+		</style>
+  </head>
+  <body oncontextmenu="return false">
+		<div>
+			<canvas id="drawingBoard" width=800 height=600></canvas>
+		</div>
+		<script>
+			let canvas = document.getElementsByTagName("canvas")[0];
+			let xp = 0;
+			let yp = 0;
+			let mousedown = false;
+			canvas.addEventListener("mousedown", function(e) {
+				let context = canvas.getContext("2d");
+				context.fillStyle = "black";
+				context.beginPath();
+				context.arc(e.offsetX, e.offsetY, 1, 0, 2 * Math.PI);
+				context.fill();
+				xp = e.offsetX; yp = e.offsetY;
+				mousedown = true;
+			});
+			window.addEventListener("mousemove", function(e) {
+				let x = e.clientX - canvas.getBoundingClientRect().left;
+				let y = e.clientY - canvas.getBoundingClientRect().top;
+				if(!mousedown) return;
+				let context = canvas.getContext("2d");
+				context.lineWidth = 3;
+				context.strokeStyle = "black";
+				context.beginPath();
+				let stepCount = Math.max(Math.abs(xp-x), Math.abs(yp-y));
+				for(let i = 0; i < stepCount; i++) {
+					context.arc(x + (xp - x) * i / stepCount, y + (yp - y) * i / stepCount, 1.5, 0, 2 * Math.PI);
+				}
+				context.fill();
+				xp = x; yp = y;
+			});
+			window.addEventListener("mouseup", function(e) {
+				mousedown = false;
+			});
+		</script>
+  </body>
+</html>
